@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hzit.dao.mapper.StudentMapper">
+
+    <sql id="studentBaseColumnSql">
+        StudentNo,
+        LoginPwd,
+        StudentName,
+        Sex,
+        GradeId,
+        Phone,
+        Address,
+        BornDate,
+        Emall,
+        IdentityCard
+    </sql>
+
+    <sql id="studentBaseWhereSql">
+        <if test="map!=null">
+            <where>
+                <if test="map.studentNo!=null">
+                    student.StudentNo = #{map.studentNo}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.loginPwd)">
+                    AND student.LoginPwd = #{map.loginPwd}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.studentName)">
+                    AND student.StudentName = #{map.studentName}
+                </if>
+                <if test="map.sex!=null">
+                    AND student.Sex = #{map.sex}
+                </if>
+                <if test="map.gradeId!=null">
+                    AND student.GradeId = #{map.gradeId}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.phone)">
+                    AND student.Phone = #{map.phone}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.address)">
+                    AND student.Address = #{map.address}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.bornDate)">
+                    AND student.BornDate = #{map.bornDate}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.emall)">
+                    AND student.Emall = #{map.emall}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.identityCard)">
+                    AND student.IdentityCard = #{map.identityCard}
+                </if>
+            </where>
+        </if>
+    </sql>
+
+    <insert id="insertStudent" parameterType="com.hzit.dao.entity.Student">
+        INSERT INTO student(
+        <include refid="studentBaseColumnSql"/>
+        )VALUES(
+            #{studentNo},
+            #{loginPwd},
+            #{studentName},
+            #{sex},
+            #{gradeId},
+            #{phone},
+            #{address},
+            #{bornDate},
+            #{emall},
+            #{identityCard}
+        )
+    </insert>
+
+    
+    <delete id="deleteStudentByStudentNo" parameterType="Integer">
+        DELETE FROM student WHERE StudentNo = #{studentNo}
+    </delete>
+
+    <update id="updateStudent" parameterType="com.hzit.dao.entity.Student">
+        UPDATE student
+        <set>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(loginPwd)">
+                LoginPwd = #{loginPwd} ,
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(studentName)">
+                StudentName = #{studentName} ,
+            </if>
+            <if test="sex!=null">
+                Sex = #{sex} ,
+            </if>
+            <if test="gradeId!=null">
+                GradeId = #{gradeId} ,
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(phone)">
+                Phone = #{phone} ,
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(address)">
+                Address = #{address} ,
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(bornDate)">
+                BornDate = #{bornDate} ,
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(emall)">
+                Emall = #{emall} ,
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(identityCard)">
+                IdentityCard = #{identityCard} ,
+            </if>
+        </set>
+        WHERE StudentNo = #{studentNo}
+    </update>
+
+    <select id="searchStudentByParams" parameterType="map" resultMap="studentVoMap">
+        SELECT
+        student.StudentNo,student.StudentName,student.LoginPwd,student.Sex,
+        student.GradeID,student.Phone,student.Address,student.BornDate,
+        student.Emall,student.IdentityCard,grade.GradeName
+        FROM student JOIN grade ON student.GradeId=grade.GradeID
+        <include refid="studentBaseWhereSql"/>
+    </select>
+
+    <select id="findById" parameterType="java.lang.Integer" resultMap="studentMap">
+        SELECT * FROM student WHERE StudentNo = #{studentNo};
+    </select>
+
+    <resultMap type="com.hzit.dao.entity.Student" id="studentMap">
+        <id column="StudentNo" property="studentNo"/>
+        <result column="LoginPwd" property="loginPwd"/>
+        <result column="StudentName" property="studentName"/>
+        <result column="Sex" property="sex"/>
+        <result column="GradeID" property="gradeId"/>
+        <result column="Phone" property="phone"/>
+        <result column="Address" property="address"/>
+        <result column="BornDate" property="bornDate"/>
+        <result column="Emall" property="emall"/>
+        <result column="IdentityCard" property="identityCard"/>
+    </resultMap>
+
+    <resultMap type="com.hzit.dao.vo.StudentVo" id="studentVoMap">
+        <id column="StudentNo" property="studentNo"/>
+        <result column="LoginPwd" property="loginPwd"/>
+        <result column="StudentName" property="studentName"/>
+        <result column="Sex" property="sex"/>
+        <result column="GradeId" property="gradeId"/>
+        <result column="Phone" property="phone"/>
+        <result column="Address" property="address"/>
+        <result column="BornDate" property="bornDate"/>
+        <result column="Emall" property="emall"/>
+        <result column="IdentityCard" property="identityCard"/>
+        <result column="GradeName" property="gradeName"/>
+    </resultMap>
+
+</mapper>

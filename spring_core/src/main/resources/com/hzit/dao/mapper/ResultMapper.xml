@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hzit.dao.mapper.ResultMapper">
+
+    <sql id="resultBaseColumnSql">
+        StudentNo,
+        SubjectNo,
+        ExamDate,
+        StudentResult,
+        student_pk
+    </sql>
+
+    <sql id="resultBaseWhereSql">
+        <if test="map!=null">
+            <where>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.studentNo)">
+                    StudentNo = #{map.studentNo}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.subjectNo)">
+                    AND SubjectNo = #{map.subjectNo}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.examDate)">
+                    AND ExamDate = #{map.examDate}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.studentResult)">
+                    AND StudentResult = #{map.studentResult}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.studentPk)">
+                    AND student_pk = #{map.studentPk}
+                </if>
+            </where>
+        </if>
+    </sql>
+
+    <insert id="insertResult" parameterType="com.hzit.dao.entity.Result">
+        INSERT INTO result(
+        <include refid="resultBaseColumnSql"/>
+        )VALUES(
+            #{studentNo},
+            #{subjectNo},
+            #{examDate},
+            #{studentResult},
+            #{studentPk}
+        )
+    </insert>
+
+    
+    <delete id="deleteResultByStudentPk" parameterType="Integer">
+        DELETE FROM result WHERE student_pk = #{studentPk}
+    </delete>
+
+    <update id="updateResult" parameterType="com.hzit.dao.entity.Result">
+        UPDATE result
+        <set>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(studentNo)">
+                StudentNo = #{studentNo} ,
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(subjectNo)">
+                SubjectNo = #{subjectNo} ,
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(examDate)">
+                ExamDate = #{examDate} ,
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(studentResult)">
+                StudentResult = #{studentResult} ,
+            </if>
+        </set>
+        WHERE student_pk = #{studentPk}
+    </update>
+
+    <select id="searchResultByParams" parameterType="map" resultMap="resultMap">
+        SELECT
+        <include refid="resultBaseColumnSql"/>
+        FROM result
+        <include refid="resultBaseWhereSql"/>
+    </select>
+
+    <resultMap type="com.hzit.dao.entity.Result" id="resultMap">
+        <id column="student_pk" property="studentPk"/>
+        <result column="StudentNo" property="studentNo"/>
+        <result column="SubjectNo" property="subjectNo"/>
+        <result column="ExamDate" property="examDate"/>
+        <result column="StudentResult" property="studentResult"/>
+    </resultMap>
+
+</mapper>
