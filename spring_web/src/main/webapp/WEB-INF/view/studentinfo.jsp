@@ -152,8 +152,6 @@
         <li><a href="find?page=${courpage+1}">&raquo;</a></li>
       </c:if>
     </ul>
-
-
   </nav>
 </div>
 <div role="alert" id="sucess" style="width: 60%;text-align: center;margin: 0 auto"></div>
